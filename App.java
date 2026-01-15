@@ -1,14 +1,13 @@
-package com.devops;
+package com.example;
 
 public class App {
     public static void main(String[] args) {
-        System.out.println("Hello from Java DevOps App from humara khan");
+        System.out.println("Java App Started");
+
         while (true) {
             try {
                 Thread.sleep(10000);
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
     }
 }
-
