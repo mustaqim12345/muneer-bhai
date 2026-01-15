@@ -2,33 +2,22 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "myapp:latest"   // Docker image ka naam
-        CONTAINER_NAME = "myapp_container" // Container ka naam
-        HOST_PORT = "8081"               // Ye port aap browser me access karoge
-        CONTAINER_PORT = "8081"          // Container ka port jo app use karta hai
+        IMAGE_NAME = "myapp-image"
+        CONTAINER_NAME = "myapp-container"
+        PORT = "8081"
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/username/your-java-app.git'
+                git 'https://github.com/mustaqim12345/muneer-bhai.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE} ."
-                }
-            }
-        }
-
-        stage('Stop & Remove Old Container') {
-            steps {
-                script {
-                    sh """
-                    docker ps -a -q --filter name=${CONTAINER_NAME} | grep -q . && docker stop ${CONTAINER_NAME} && docker rm ${CONTAINER_NAME} || echo 'No old container found'
-                    """
+                    sh "docker build -t $IMAGE_NAME ."
                 }
             }
         }
@@ -36,18 +25,22 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    sh "docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} --name ${CONTAINER_NAME} ${DOCKER_IMAGE}"
-                }
-            }
-        }
-
-        stage('Verify') {
-            steps {
-                script {
-                    sh "curl -I http://localhost:${HOST_PORT}"
+                    // Agar pehle container chal raha hai to stop aur remove kar do
+                    sh """
+                    if [ \$(docker ps -a -q -f name=$CONTAINER_NAME) ]; then
+                        docker stop $CONTAINER_NAME
+                        docker rm $CONTAINER_NAME
+                    fi
+                    docker run -d --name $CONTAINER_NAME -p $PORT:$PORT $IMAGE_NAME
+                    """
                 }
             }
         }
     }
-}
 
+    post {
+        success {
+            echo "Docker container is up! Access it at http://<VM-IP>:$PORT"
+        }
+    }
+}
