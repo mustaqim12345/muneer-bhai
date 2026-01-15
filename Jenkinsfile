@@ -3,9 +3,9 @@ pipeline {
 
     stages {
 
-        stage('Git Clone') {
+        stage('Checkout Code') {
             steps {
-                git 'https://github.com/mustaqim12345/muneer-bhai.git'
+                checkout scm
             }
         }
 
@@ -17,16 +17,15 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t java-devops-app .'
+                sh 'docker build -t muneer/java-devops-app:latest .'
             }
         }
 
         stage('Run Container') {
             steps {
                 sh '''
-                docker stop java-app || true
-                docker rm java-app || true
-                docker run -d -p 8081:8080 --name java-app java-devops-app
+                docker rm -f java-app || true
+                docker run -d -p 8081:8080 --name java-app muneer/java-devops-app:latest
                 '''
             }
         }
