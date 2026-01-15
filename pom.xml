@@ -5,17 +5,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.devops</groupId>
+    <groupId>com.example</groupId>
     <artifactId>java-app</artifactId>
     <version>1.0</version>
-    <packaging>jar</packaging>
-
-    <name>Java DevOps App</name>
-
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-    </properties>
 
     <build>
         <plugins>
@@ -26,7 +18,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.devops.App</mainClass>
+                            <mainClass>com.example.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
